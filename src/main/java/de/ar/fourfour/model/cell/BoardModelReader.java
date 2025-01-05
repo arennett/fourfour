@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 
+import static de.ar.fourfour.ConstIf.*;
 import static de.ar.fourfour.ConstIf.BOARDMAP_FILENAME;
 
 public class BoardModelReader implements BoardModelReaderIf {
@@ -25,18 +26,21 @@ public class BoardModelReader implements BoardModelReaderIf {
         int row=0;
         while (bufferedReader.ready()){
             String line = bufferedReader.readLine();
-            String[] strs = line.split(",");
+            String[] strs = line.split(" ");
             int col = 0;
             for (String str:strs){
-                bModel.setCell(row,col,Cell.parseStr(str));
-                col ++;
+                bModel.setCell(row,col,Cell.create(str,row,col,bModel));
+                col++;
             }
             row++;
         }
+
+        bModel.allCellsRead();
+
     }
 
     @java.lang.Override
     public void readModel(BoardModelIf bmodel, String modelName) throws IOException, FFException {
-        readFile(BOARDMAP_FILENAME+modelName+".txt",bmodel);
+        readFile(BOARDMAP_FILENAME+modelName+"_"+ROW_SIZE+".txt",bmodel);
     }
 }

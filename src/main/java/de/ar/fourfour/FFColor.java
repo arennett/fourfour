@@ -1,4 +1,6 @@
-package de.ar.fourfour.model;
+package de.ar.fourfour;
+
+import java.awt.*;
 
 public enum FFColor {
     RED,BLUE,YELLOW,GREEN;
@@ -7,6 +9,8 @@ public enum FFColor {
 
     static final String[] SHORTSTR_COLORS = {"r","b","y","g"};
 
+    static final Color[] COLORS = {Color.red,Color.blue,Color.yellow,Color.green};
+
     public static FFColor getFFColor(String shortStrCol){
         for (int i=0; i < SHORTSTR_COLORS.length;i++){
             if (SHORTSTR_COLORS[i].equals(shortStrCol)){
@@ -14,6 +18,11 @@ public enum FFColor {
             }
         }
         return null;
+    }
+
+
+    public Color getColor(){
+        return COLORS[ordinal()];
     }
 
 }

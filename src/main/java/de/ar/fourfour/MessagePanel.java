@@ -6,10 +6,9 @@ import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import static de.ar.fourfour.ConstIf.*;
 
 public class MessagePanel extends JPanel {
-    public static int PANEL_HEIGHT = 200;
-    public static int PANEL_WIDTH = PANEL_HEIGHT / 3 * 4;
 
     JTextArea jTextArea;
 
@@ -31,15 +30,14 @@ public class MessagePanel extends JPanel {
         jTextArea.setEditable(false);
         jTextArea.setBackground(Color.WHITE);
         this.add(scrollPane);
-        this.setPreferredSize(new Dimension(BoardPanel.BOARD_WIDTH,100));
+        this.setPreferredSize(new Dimension(BOARD_LENGTH,100));
 
     }
-
 
     public void append(String message) {
         Date date= new Date();
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss.SSS");
-        jTextArea.append(" "+df.format(date) +" "+ message);
+        jTextArea.append(" "+df.format(date) +" "+ message+"\n");
 
     }
 }
