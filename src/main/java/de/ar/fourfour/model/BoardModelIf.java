@@ -1,5 +1,6 @@
 package de.ar.fourfour.model;
 
+import de.ar.fourfour.FFColor;
 import de.ar.fourfour.Player;
 import de.ar.fourfour.model.cell.Cell;
 import de.ar.fourfour.model.cell.FieldCell;
@@ -18,6 +19,8 @@ public interface BoardModelIf {
     ArrayList<GenCell> getGenCells();
 
     ArrayList<FieldCell> getFieldCells();
+
+    ArrayList<FieldCell> getOccupiedFieldCells(FFColor ffColor);
 
     void setTurn(Player player);
 

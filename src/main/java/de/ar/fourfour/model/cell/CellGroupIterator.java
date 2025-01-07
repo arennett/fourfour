@@ -9,12 +9,11 @@ import java.util.function.Consumer;
 public class CellGroupIterator implements Iterable<CellGroup>{
 
     BoardModelIf boardModel;
-    ArrayList<FieldCell> fieldCells;
+
     ArrayList<CellGroup> cellGroups;
-    public CellGroupIterator(BoardModelIf boardModel){
+    public CellGroupIterator(BoardModelIf boardModel,ArrayList<FieldCell> fieldCells){
 
         this.boardModel = boardModel;
-        fieldCells =boardModel.getFieldCells();
         cellGroups= new ArrayList<>();
         for (FieldCell fcell:fieldCells){
             CellGroup cellGroup= new CellGroup(fcell, CellGroup.Orientation.HORIZONTAL);

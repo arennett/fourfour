@@ -33,31 +33,37 @@ public class GameControl {
         game.setTurn(player0);
         boardPanel.start();
 
-
+        game.clearMessages();
         game.message("Game started");
     }
 
     public void switchTurn() {
-        boardPanel.repaint();
         if (!checkForFour()){
             game.message("switch turn to "+game.getNextTurn());
             game.switchTurn();
             boardModel.setTurn(game.getTurn());
             boardPanel.repaint();
+        }else{
+            game.setRunning(false);
+            game.message(""+game.getTurn().getFFColor()+" YOU WIN");
         }
     }
 
     private boolean checkForFour() {
-        CellGroupIterator cgit = new CellGroupIterator(boardModel);
+        CellGroupIterator cgit = new CellGroupIterator(boardModel,
+                boardModel.getOccupiedFieldCells(game.getTurn().getFFColor()));
         Iterator<CellGroup> it = cgit.iterator();
         while (it.hasNext()) {
             CellGroup cgroup = it.next();
+            if(cgroup.isFFWinGroup(game.getTurn().getFFColor())){
+                return true;
+            }
         }
         return false;
     }
 
     private boolean animateCheckForFour() {
-        CellGroupIterator cgit = new CellGroupIterator(boardModel);
+        CellGroupIterator cgit = new CellGroupIterator(boardModel,boardModel.getOccupiedFieldCells(game.getTurn().getFFColor()));
         Iterator<CellGroup> it = cgit.iterator();
 
         Thread t = new Thread() {

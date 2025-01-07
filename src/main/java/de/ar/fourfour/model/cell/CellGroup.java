@@ -1,5 +1,7 @@
 package de.ar.fourfour.model.cell;
 
+import de.ar.fourfour.FFColor;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.function.Consumer;
@@ -66,6 +68,20 @@ public class CellGroup implements Iterable<Cell>{
         }
         for (Cell cell:cells) {
             if (!(cell instanceof FieldCell)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isFFWinGroup(FFColor ffcolor){
+        boolean isFFGroup = false;
+        if (!isFieldCellGroup()){
+            return  false;
+        }
+        for ( Cell cell:cells) {
+            FieldCell fcell = (FieldCell) cell;
+            if (fcell.getOccColor()!=ffcolor) {
                 return false;
             }
         }

@@ -1,5 +1,6 @@
 package de.ar.fourfour.model;
 
+import de.ar.fourfour.FFColor;
 import de.ar.fourfour.Player;
 import de.ar.fourfour.model.cell.Cell;
 import de.ar.fourfour.model.cell.FieldCell;
@@ -70,6 +71,17 @@ public class BoardModel implements  BoardModelIf{
         for (Cell c:list){
             if (c instanceof FieldCell) {
                 arrList.add((FieldCell)c);
+            }
+        }
+        return arrList;
+    }
+
+    @Override
+    public ArrayList<FieldCell> getOccupiedFieldCells(FFColor ffColor){
+        ArrayList<FieldCell> arrList = new ArrayList<>();
+        for (FieldCell c:getFieldCells()){
+            if (c.getOccColor()==ffColor) {
+                arrList.add(c);
             }
         }
         return arrList;

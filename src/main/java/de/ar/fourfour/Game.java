@@ -50,4 +50,7 @@ public class Game {
         return p;
     }
 
+    public void clearMessages() {
+        mpanel.clear();
+    }
 }

@@ -89,19 +89,18 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
     private void cellClicked(int row, int col) {
         logger.debug(" cellClicked: row <{}> col <{}>", row, col);
         Cell cell = boardModel.getCell(row, col);
-        if (cell instanceof GenCell) {
-            GenCell genCell = (GenCell) cell;
-            if (game.getTurn().getFFColor() == genCell.getFFColor()) {
-                FieldCell fcell = genCell.getLastFieldCell();
-                if (fcell != null) {
-                    fcell.setOccColor(genCell.getFFColor());
-                    gameControl.switchTurn();
+        if(game.isRunning()) {
+            if (cell instanceof GenCell) {
+                GenCell genCell = (GenCell) cell;
+                if (game.getTurn().getFFColor() == genCell.getFFColor()) {
+                    FieldCell fcell = genCell.getLastFieldCell();
+                    if (fcell != null) {
+                        fcell.setOccColor(genCell.getFFColor());
+                        gameControl.switchTurn();
+                    }
+                    repaint();
                 }
-
-                repaint();
-
             }
-
         }
     }
 

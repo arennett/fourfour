@@ -11,7 +11,7 @@ import static de.ar.fourfour.ConstIf.*;
 public class MessagePanel extends JPanel {
 
     JTextArea jTextArea;
-
+    JScrollPane scrollPane;
     public MessagePanel(){
         initUi();
     }
@@ -25,7 +25,7 @@ public class MessagePanel extends JPanel {
         jTextArea.setFont(new Font("Courier", Font.BOLD, 12));
         DefaultCaret caret = (DefaultCaret) jTextArea.getCaret();
         caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-        JScrollPane scrollPane = new JScrollPane(jTextArea);
+        scrollPane = new JScrollPane(jTextArea);
         scrollPane.setAutoscrolls(true);
         jTextArea.setEditable(false);
         jTextArea.setBackground(Color.WHITE);
@@ -38,6 +38,11 @@ public class MessagePanel extends JPanel {
         Date date= new Date();
         SimpleDateFormat df = new SimpleDateFormat("hh:mm:ss.SSS");
         jTextArea.append(" "+df.format(date) +" "+ message+"\n");
+        //scrollPane.getVerticalScrollBar().setValue(scrollPane.getVerticalScrollBar().getMaximum());
 
+    }
+
+    public void clear() {
+        jTextArea.setText("");
     }
 }
