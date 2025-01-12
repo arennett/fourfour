@@ -7,7 +7,7 @@ public class Player {
     private final FFColor color;
     private final boolean isComp;
 
-    public static ArrayList<Player> playerList;
+    public static final ArrayList<Player> playerList;
 
     static{
         playerList=new ArrayList<>();

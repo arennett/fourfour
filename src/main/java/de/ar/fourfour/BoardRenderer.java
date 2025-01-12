@@ -1,6 +1,5 @@
 package de.ar.fourfour;
 
-import de.ar.fourfour.model.BoardModel;
 import de.ar.fourfour.model.BoardModelIf;
 import de.ar.fourfour.model.cell.*;
 import org.slf4j.Logger;
@@ -16,27 +15,68 @@ public class BoardRenderer implements BoardRendererIf{
 
 
         Graphics2D g2d = (Graphics2D) g;
+
         g2d.setStroke(new BasicStroke(4*CELL_MARGIN));
 
         g2d.clearRect(0,0,BOARD_LENGTH,BOARD_LENGTH);
         g2d.setColor(Color.darkGray);
         g2d.fillRect(0,0,BOARD_LENGTH,BOARD_LENGTH);
 
+        Rectangle rec = g.getClipBounds();
+        logger.debug(" Clip Rectangle <{}>",rec);
+
+        if (rec.x < 0) rec.x=0;
+        if (rec.y < 0) rec.y=0;
+
+        int rrow = rec.y/CELL_WIDTH;
+        int ccol = rec.x/CELL_WIDTH;
+        int nr_rows= rec.height/CELL_WIDTH;
+        int nr_cols= rec.width/CELL_WIDTH;
+
+
+        boolean brender=false;
+        for (int r=0;r<nr_rows;r++){
+            for (int c=0;c<nr_cols;c++){
+                if(rrow+r>MAX_ROW_IDX || ccol+c > MAX_ROW_IDX){
+                    break;
+                }
+                Cell cell=bm.getCell(rrow+r,ccol+c);
+                logger.debug("render cell:: <{}>",cell);
+                g2d.setColor(Color.yellow);
+                g2d.drawRect(rec.x,rec.y, rec.width, rec.height);
+                renderCell(cell, g2d);
+                brender=true;
+            }
+        }
+        if (brender) {
+            drawRectangles(g);
+            logger.debug("return short rendering");
+            return;
+        }
+
+//
         for (int row=0;row < ROW_SIZE;row++){
             for (int col=0;col < ROW_SIZE;col++){
                 Cell cell=bm.getCell(row,col);
-                renderCell(cell,row,col,g2d);
+                if (cell!=null) renderCell(cell,g2d);
               }
         }
-        int w = CELL_WIDTH * (ROW_SIZE-2) ;
 
-        g2d.drawRect(CELL_WIDTH,CELL_WIDTH,w,w);
-        w = CELL_WIDTH * (ROW_SIZE-4) ;
-        g2d.drawRect(CELL_WIDTH*2,CELL_WIDTH*2,w,w);
+        drawRectangles(g);
+
 
     }
 
-    private void renderCell(Cell cell, int row, int col,Graphics2D g2d) {
+    public void drawRectangles(Graphics g){
+        Graphics2D g2d = (Graphics2D) g;
+        g.clipRect(0,0,BOARD_LENGTH,BOARD_LENGTH);
+        int w = CELL_WIDTH * (ROW_SIZE-2) ;
+        g2d.drawRect(CELL_WIDTH,CELL_WIDTH,w,w);
+        w = CELL_WIDTH * (ROW_SIZE-4) ;
+        g2d.drawRect(CELL_WIDTH*2,CELL_WIDTH*2,w,w);
+    }
+
+    private void renderCell(Cell cell,Graphics2D g2d) {
         Color cellColor = null;
         if (cell instanceof EmptyCell) {
             cellColor = Color.lightGray;
@@ -57,14 +97,15 @@ public class BoardRenderer implements BoardRendererIf{
             }
         }
         if (cell == null) {
-            cellColor = Color.lightGray;
+            return;
         } else {
             if (cell.isHighLight()) {
                 cellColor = Color.orange;
             }
         }
-        int x = col * CELL_WIDTH + CELL_MARGIN;
-        int y = row * CELL_WIDTH + CELL_MARGIN;
+
+        int x = cell.getCol() * CELL_WIDTH + CELL_MARGIN;
+        int y = cell.getRow() * CELL_WIDTH + CELL_MARGIN;
 
         g2d.setStroke(new BasicStroke(6));
         g2d.setColor(Color.BLACK);
@@ -75,7 +116,7 @@ public class BoardRenderer implements BoardRendererIf{
         g2d.fillOval(x+2*CELL_MARGIN, y+2*CELL_MARGIN, CELL_WIDTH - 6 * CELL_MARGIN, CELL_WIDTH - 6 * CELL_MARGIN);
 
 
-        g2d.drawString("" + row + "/" + col, x + 10, y + 10);
+        g2d.drawString("" + cell.getRow() + "/" + cell.getCol(), x + 10, y + 10);
         g2d.setColor(Color.BLACK);
         if (cell instanceof GenCell) {
             g2d.fillOval(x+3*CELL_MARGIN, y+3*CELL_MARGIN, CELL_WIDTH - 8 * CELL_MARGIN, CELL_WIDTH - 8 * CELL_MARGIN);

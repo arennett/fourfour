@@ -13,10 +13,11 @@ import java.util.ArrayList;
 
 public class BoardModel implements  BoardModelIf{
 
-    Logger logger = LoggerFactory.getLogger(BoardModel.class);
+    final Logger logger = LoggerFactory.getLogger(BoardModel.class);
     private final int size;
-    private Cell[][] arr;
-    ArrayList<Cell> list;
+    private final Cell[][] arr;
+    final ArrayList<Cell> list;
+    private Cell cellMovedOff,cellMovedOn;
 
     public BoardModel(int size){
      this.size = size;
@@ -78,7 +79,7 @@ public class BoardModel implements  BoardModelIf{
 
     @Override
     public ArrayList<FieldCell> getOccupiedFieldCells(FFColor ffColor){
-        ArrayList<FieldCell> arrList = new ArrayList<>();
+        ArrayList<FieldCell> arrList = new ArrayList<FieldCell>();
         for (FieldCell c:getFieldCells()){
             if (c.getOccColor()==ffColor) {
                 arrList.add(c);
@@ -105,5 +106,21 @@ public class BoardModel implements  BoardModelIf{
         }
     }
 
+    @Override
+    public void setCellMovedOn(Cell cell) {
+        this.cellMovedOn=cell;
+    }
 
+    public void setCellMovedOff(Cell cell) {
+        this.cellMovedOff = cell;
+    }
+
+    @Override
+    public Cell getCellMovedOn() {
+        return cellMovedOn;
+    }
+    @Override
+    public Cell getCellMovedOff() {
+        return cellMovedOff;
+    }
 }

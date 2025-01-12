@@ -9,7 +9,7 @@ public class Cell {
     private final int row;
     private final int col;
     private final BoardModelIf bmodel;
-    ArrayList<Cell> neighbours = new ArrayList<>();
+    final ArrayList<Cell> neighbours = new ArrayList<>();
     private Cell neighUp = null;
     private Cell neighLeft = null;
     private Cell neighDown = null;
@@ -20,7 +20,7 @@ public class Cell {
 
     public enum Direction {
         up,left,down,right;
-        static String[] str = {"up","left","down","right"};
+        static final String[] str = {"up","left","down","right"};
         public String getString(){
             return str[this.ordinal()];
         }

@@ -33,8 +33,6 @@ public class NeighBoursIterator implements Iterable<Cell> {
         return it;
     }
 
-    ;
-
     @Override
     public void forEach(Consumer<? super Cell> action) {
         Iterable.super.forEach(action);

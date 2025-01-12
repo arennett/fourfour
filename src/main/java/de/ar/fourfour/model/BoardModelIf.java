@@ -27,4 +27,12 @@ public interface BoardModelIf {
     void allCellsRead();
 
 
+    void setCellMovedOn(Cell cell);
+    void setCellMovedOff(Cell cell);
+
+    Cell getCellMovedOn();
+    Cell getCellMovedOff();
+
+
+
 }

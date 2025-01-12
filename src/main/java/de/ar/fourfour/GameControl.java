@@ -14,7 +14,7 @@ public class GameControl {
 
 
     BoardModelIf boardModel;
-    private Game game;
+    private final Game game;
 
     public GameControl(Game game){
         this.game = game;

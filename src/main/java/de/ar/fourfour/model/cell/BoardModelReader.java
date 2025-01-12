@@ -11,14 +11,13 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import static de.ar.fourfour.ConstIf.*;
-import static de.ar.fourfour.ConstIf.BOARDMAP_FILENAME;
 
 public class BoardModelReader implements BoardModelReaderIf {
 
     private static final Logger logger = LoggerFactory.getLogger(BoardModelReader.class);
 
     @java.lang.Override
-    public void readFile(String fileName, BoardModelIf bModel) throws IOException, FFException {
+    public void readFile(String fileName, BoardModelIf bModel) throws IOException {
         FileReader filereader;
         filereader = new FileReader(fileName);
         BufferedReader bufferedReader = new BufferedReader(filereader);

@@ -3,6 +3,8 @@ package de.ar.fourfour.model.cell;
 import de.ar.fourfour.FFColor;
 import de.ar.fourfour.model.BoardModelIf;
 
+import java.util.ArrayList;
+
 public class GenCell extends Cell{
     enum Orientation {upper,left,bottom,right}
 
@@ -17,6 +19,11 @@ public class GenCell extends Cell{
                     break;
                 }
             }
+            if (fieldDirection == null){
+                ArrayList<Cell> arr = this.getNeighbours();
+                int test=0;
+            }
+
     }
 
 
@@ -40,7 +47,7 @@ public class GenCell extends Cell{
             }
         }
         return null;
-    };
+    }
 
 
     public FieldCell getLastFieldCell() {
@@ -63,6 +70,6 @@ public class GenCell extends Cell{
             return (FieldCell) itCell;
         }
         return null;
-    };
+    }
 
 }

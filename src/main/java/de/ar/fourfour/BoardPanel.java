@@ -11,16 +11,15 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
+
 import static de.ar.fourfour.ConstIf.*;
 
-public class BoardPanel extends JPanel implements MouseListener, MouseMotionListener {
+public class BoardPanel extends JPanel  {
 
     private final Game game;
-    Logger logger = LoggerFactory.getLogger(BoardPanel.class);
-    JPanel innerBoard;
+    final Logger logger = LoggerFactory.getLogger(BoardPanel.class);
+
     BoardRendererIf boardRenderer;
 
     public void setBoardModel(BoardModelIf boardModel) {
@@ -32,9 +31,9 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
     BoardModelReaderIf boardModelReader;
     private GameControl gameControl;
 
-    private Cell cellMoved = null;
+    private Cell lastCellMovedOn = null;
 
-    public BoardPanel(Game game) throws FFException {
+    public BoardPanel(Game game)  {
         this.game = game;
         initUi();
         logger.debug("initialized");
@@ -45,13 +44,42 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         this.gameControl = gameControl;
     }
 
-    private void initUi() throws FFException {
+    private void initUi()  {
 
         boardModelReader = new BoardModelReader();
         boardRenderer = new BoardRenderer();
         setPreferredSize(new Dimension(BOARD_LENGTH, BOARD_LENGTH));
-        addMouseListener(this);
-        addMouseMotionListener(this);
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                int x = e.getX();
+                int y = e.getY();
+                logger.debug(" mouseClicked: x <{}> y <{}>", x, y);
+                int row = y * ROW_SIZE / BOARD_LENGTH;
+                int col = x * ROW_SIZE / BOARD_LENGTH;
+                cellClicked(row, col);
+            }
+        });
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int x = (int) (e.getX());
+                int y = (int) (e.getY());
+                //String              s = env.get( "DISPLAY_SCALE" );
+                int row = y * ROW_SIZE / BOARD_LENGTH;
+                int col = x * ROW_SIZE / BOARD_LENGTH;
+                Cell cell = boardModel.getCell(row, col);
+                if (cell == lastCellMovedOn){
+                    return;
+                }
+                cellMovedOff(lastCellMovedOn);
+                cellMovedOn(cell);
+
+                lastCellMovedOn =cell;
+
+            }
+        });
     }
 
     public void start() throws FFException {
@@ -74,29 +102,18 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
 
 
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        logger.debug(" mouseClicked: x <{}> y <{}>", x, y);
-        int row = y * ROW_SIZE / BOARD_LENGTH;
-        int col = x * ROW_SIZE / BOARD_LENGTH;
-        cellClicked(row, col);
-
-
-    }
-
     private void cellClicked(int row, int col) {
         logger.debug(" cellClicked: row <{}> col <{}>", row, col);
         Cell cell = boardModel.getCell(row, col);
         if(game.isRunning()) {
-            if (cell instanceof GenCell) {
-                GenCell genCell = (GenCell) cell;
+            if (cell instanceof GenCell genCell) {
                 if (game.getTurn().getFFColor() == genCell.getFFColor()) {
-                    FieldCell fcell = genCell.getLastFieldCell();
-                    if (fcell != null) {
-                        fcell.setOccColor(genCell.getFFColor());
-                        gameControl.switchTurn();
+                    if (genCell.getFieldCell()!=null) {
+                        FieldCell fCell = genCell.getLastFieldCell();
+                        if (fCell != null) {
+                            fCell.setOccColor(genCell.getFFColor());
+                            gameControl.switchTurn();
+                        }
                     }
                     repaint();
                 }
@@ -104,58 +121,39 @@ public class BoardPanel extends JPanel implements MouseListener, MouseMotionList
         }
     }
 
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
 
-        int row = y * ROW_SIZE / BOARD_LENGTH;
-        int col = x * ROW_SIZE / BOARD_LENGTH;
-        Cell cell = boardModel.getCell(row, col);
-        if (cell != cellMoved) {
-            cellMovedOn(cell, true);
-            cellMovedOn(cellMoved, false);
-            cellMoved = cell;
+
+    private void cellMovedOn(Cell cell) {
+        logger.debug(" cellMovedOn: <{}> ", cell);
+        boardModel.setCellMovedOn(cell);
+        if (cell != null) {
+
+            if (cell instanceof GenCell) {
+                if (game.getTurn().getFFColor() == ((GenCell) cell).getFFColor()) {
+                      cell.setHighLight(true);
+                }
+            }
+            Rectangle rec = new Rectangle(cell.getCol() * CELL_WIDTH, cell.getRow() * CELL_WIDTH, CELL_WIDTH, CELL_WIDTH);
+
+            repaint(rec);
         }
-    }
 
-    private void cellMovedOn(Cell cell, boolean b) {
-        //logger.debug(" cellMovedOn: <{} {}> ", cell, b);
+    }
+    private void cellMovedOff(Cell cell) {
+        logger.debug(" cellMovedOff: <{}> ", cell);
+        boardModel.setCellMovedOff(cell);
         if (cell != null) {
             if (cell instanceof GenCell) {
                 if (game.getTurn().getFFColor() == ((GenCell) cell).getFFColor()) {
-                    cell.setHighLight(b);
-                   // Rectangle rec = new Rectangle(cell.getRow() * CELL_WIDTH, cell.getCol() * CELL_WIDTH, CELL_WIDTH, CELL_WIDTH);
-                    repaint();
+                    cell.setHighLight(false);
                 }
             }
+            Rectangle rec = new Rectangle(cell.getCol() * CELL_WIDTH, cell.getRow() * CELL_WIDTH, CELL_WIDTH, CELL_WIDTH);
+            repaint(rec);
         }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
 
     }
 
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseDragged(MouseEvent e) {
-
-    }
 
 
 }

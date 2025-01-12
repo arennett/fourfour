@@ -8,9 +8,9 @@ import java.util.function.Consumer;
 
 public class CellGroupIterator implements Iterable<CellGroup>{
 
-    BoardModelIf boardModel;
+    final BoardModelIf boardModel;
 
-    ArrayList<CellGroup> cellGroups;
+    final ArrayList<CellGroup> cellGroups;
     public CellGroupIterator(BoardModelIf boardModel,ArrayList<FieldCell> fieldCells){
 
         this.boardModel = boardModel;

@@ -20,7 +20,7 @@ public class MainWindow extends JFrame {
         setVisible(true);
     }
 
-    private void initUI() throws FFException {
+    private void initUI() {
         MessagePanel messagePanel = new MessagePanel();
         Game game= new Game(messagePanel);
         game.message("FourFour V1.0 loading...");

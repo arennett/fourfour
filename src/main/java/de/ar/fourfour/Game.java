@@ -44,10 +44,9 @@ public class Game {
         return Player.getNextPlayer(getTurn());
     }
 
-    public Player switchTurn(){
+    public void switchTurn(){
         Player p=getNextTurn();
         setTurn(p);
-        return p;
     }
 
     public void clearMessages() {
