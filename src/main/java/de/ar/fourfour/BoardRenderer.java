@@ -9,6 +9,7 @@ import static de.ar.fourfour.ConstIf.*;
 
 public class BoardRenderer implements BoardRendererIf{
     Logger logger = LoggerFactory.getLogger(BoardRenderer.class);
+
     @Override
     public void render(Graphics g, BoardModelIf bm) {
 
@@ -22,39 +23,17 @@ public class BoardRenderer implements BoardRendererIf{
         g2d.setColor(Color.darkGray);
         g2d.fillRect(0,0,BOARD_LENGTH,BOARD_LENGTH);
 
-        Rectangle rec = g.getClipBounds();
-        logger.debug(" Clip Rectangle <{}>",rec);
 
+
+        double scale = 1;
+
+        Rectangle rec = g.getClipBounds();
         if (rec.x < 0) rec.x=0;
         if (rec.y < 0) rec.y=0;
-
-        int rrow = rec.y/CELL_WIDTH;
-        int ccol = rec.x/CELL_WIDTH;
-        int nr_rows= rec.height/CELL_WIDTH;
-        int nr_cols= rec.width/CELL_WIDTH;
+        logger.debug(" Clip Rectangle <{}>",rec);
 
 
-        boolean brender=false;
-        for (int r=0;r<nr_rows;r++){
-            for (int c=0;c<nr_cols;c++){
-                if(rrow+r>MAX_ROW_IDX || ccol+c > MAX_ROW_IDX){
-                    break;
-                }
-                Cell cell=bm.getCell(rrow+r,ccol+c);
-                logger.debug("render cell:: <{}>",cell);
-                g2d.setColor(Color.yellow);
-                g2d.drawRect(rec.x,rec.y, rec.width, rec.height);
-                renderCell(cell, g2d);
-                brender=true;
-            }
-        }
-        if (brender) {
-            drawRectangles(g);
-            logger.debug("return short rendering");
-            return;
-        }
-
-//
+        logger.debug("full rendering");
         for (int row=0;row < ROW_SIZE;row++){
             for (int col=0;col < ROW_SIZE;col++){
                 Cell cell=bm.getCell(row,col);
